@@ -101,13 +101,10 @@ def document_editing_wrapper(query: str, bucket_key: str, session_id: str):
 
         for task in tasks:
             find_list_ = find_list(task)
-            print(find_list_)
             target_keywords = target_finder(find_list_, vector_store, 5, session_id)
             if not ast.literal_eval(target_keywords):
                 cannot_find.append(f"Could not {find_list_}")
-            print(target_keywords)
             replacement_list = replace(task, target_keywords)
-            #print(replacement_list)
             doc = apply_replacements_in_doc(doc, ast.literal_eval(target_keywords), ast.literal_eval(replacement_list))
 
         if len(cannot_find) == len(tasks):
@@ -116,7 +113,7 @@ def document_editing_wrapper(query: str, bucket_key: str, session_id: str):
                      "edited": False}
             return json.dumps(response)
     
-        doc.save(str(working_docx)) #Save the edited document 
+        doc.save(str(working_docx)) 
         if source_type == "PDF":
             subprocess.run([
                 "soffice",
